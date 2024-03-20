@@ -1,0 +1,12 @@
+import pandas as pd
+df = pd.read_csv('country_vaccination_stats.csv')
+df.head()
+def fill_missing_data(group):
+    min_valid_value = group['daily_vaccinations'].min()
+    if pd.isna(min_valid_value):
+        return group['daily_vaccinations'].fillna(0)
+    else:
+        return group['daily_vaccinations'].fillna(min_valid_value)
+
+df['daily_vaccinations'] = df.groupby('country').apply(fill_missing_data).reset_index(level=0, drop=True)
+df.head()
