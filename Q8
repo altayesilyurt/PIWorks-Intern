@@ -1,0 +1,23 @@
+WITH CountryMedians AS (
+  SELECT 
+    country,
+    COALESCE(MEDIAN(daily_vaccinations), 0) AS median_daily_vaccinations
+  FROM 
+    vaccination_stats
+  GROUP BY 
+    country
+)
+
+UPDATE 
+  vaccination_stats
+SET 
+  daily_vaccinations = (
+    SELECT 
+      median_daily_vaccinations
+    FROM 
+      CountryMedians
+    WHERE 
+      vaccination_stats.country = CountryMedians.country
+  )
+WHERE 
+  daily_vaccinations IS NULL;
