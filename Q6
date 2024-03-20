@@ -1,5 +1,6 @@
 import pandas as pd
 df = pd.read_csv('country_vaccination_stats.csv')
-df.head()
-
+median_vaccinations = df.groupby('country')['daily_vaccinations'].median()
+top_3_countries = median_vaccinations.nlargest(3)
+print(top_3_countries)
 
